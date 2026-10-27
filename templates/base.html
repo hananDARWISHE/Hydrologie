@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hydrologie & Eaux Pluviales — Master{% endblock %}</title>
+    
+    <!-- Google Fonts & Bootstrap 5 & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Marked.js pour le Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- MathJax 3 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            /* Palette de couleurs dynamiques */
+            --gradient-nav: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+            --gradient-ai: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            --gradient-btn: linear-gradient(135deg, #0284c7, #2563eb);
+            --gradient-active: linear-gradient(135deg, #2563eb, #38bdf8);
+            
+            --cm-color: #2563eb;
+            --td-color: #ea580c;
+            --corrige-color: #059669;
+            --bg-light: #f1f5f9;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif; 
+            background-color: var(--bg-light);
+            color: #1e293b;
+        }
+
+        /* Navbar avec dégradé moderne */
+        .navbar-custom {
+            background: var(--gradient-nav);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
+        }
+
+        /* Sidebar latérale */
+        .sidebar { 
+            height: calc(100vh - 65px); 
+            overflow-y: auto; 
+            position: sticky; 
+            top: 65px; 
+            background: #ffffff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.03);
+        }
+
+        .list-group-item {
+            border: none;
+            margin-bottom: 4px;
+            border-radius: 8px !important;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.2s ease;
+        }
+
+        .list-group-item:hover {
+            background-color: #f8fafc;
+            color: #0284c7;
+            transform: translateX(4px);
+        }
+
+        .list-group-item.active {
+            background: var(--gradient-active) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            border: none;
+        }
+
+        /* Cartes & cadres */
+        .card-custom {
+            background: #ffffff;
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        /* Alertes mathématiques avec bordures néon */
+        .alert-primary {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-left: 5px solid #2563eb;
+            color: #1e40af;
+            border-radius: 10px;
+        }
+        .alert-secondary {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #64748b;
+            color: #334155;
+            border-radius: 10px;
+        }
+
+        /* Style enrichi du tuteur IA */
+        .ai-header {
+            background: var(--gradient-ai);
+            color: white;
+            font-weight: 600;
+        }
+
+        .ai-content h1, .ai-content h2, .ai-content h3, .ai-content h4 {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: #4338ca;
+            margin-top: 12px;
+            margin-bottom: 6px;
+        }
+        .ai-content p { margin-bottom: 8px; line-height: 1.5; }
+        
+        .ai-content table {
+            width: 100%;
+            margin: 10px 0;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .ai-content th, .ai-content td {
+            border: 1px solid #e2e8f0;
+            padding: 6px 10px;
+        }
+        .ai-content th {
+            background: #e0e7ff;
+            color: #3730a3;
+            font-weight: 600;
+        }
+        .ai-content tr:nth-child(even) { background: #f8fafc; }
+        .ai-content ul, .ai-content ol { padding-left: 18px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <!-- Navbar supérieure colorée -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top py-2">
+        <div class="container-fluid px-3">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
+                <span class="p-2 rounded-circle bg-white bg-opacity-20 me-2 d-inline-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                    <i class="bi bi-droplet-half text-info fs-5"></i>
+                </span>
+                <span style="letter-spacing: -0.5px;">HydroMaster</span>
+                <span class="badge bg-warning text-dark fs-7 ms-2 fw-semibold px-2 py-1 rounded-pill">Univ. Lille</span>
+            </a>
+            <div class="d-flex text-white-50 align-items-center">
+                <span class="badge bg-light text-primary bg-opacity-90 fw-semibold px-3 py-2 rounded-pill shadow-sm">
+                    <i class="bi bi-stars text-warning me-1"></i> Tuteur IA  Actif
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar latérale des 12 séances -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3">
+                <div class="d-flex align-items-center mb-3 px-2">
+                    <i class="bi bi-collection-play-fill text-primary me-2"></i>
+                    <h6 class="text-uppercase fw-bold text-muted small m-0" style="letter-spacing: 0.5px;">Parcours 12 Séances</h6>
+                </div>
+                
+                <div class="list-group list-group-flush">
+                    {% for sid in range(1, 13) %}
+                    <a href="/seance/{{ sid }}" class="list-group-item list-group-item-action py-2 d-flex align-items-center {% if seance_id == sid %}active{% endif %}">
+                        <span class="badge rounded-circle me-2 
+                            {% if sid in [1,2,3] %}bg-primary bg-opacity-25 text-primary
+                            {% elif sid in [4,6,7] %}bg-danger bg-opacity-25 text-danger
+                            {% elif sid in [5,11] %}bg-success bg-opacity-25 text-success
+                            {% elif sid == 8 %}bg-warning bg-opacity-25 text-warning
+                            {% else %}bg-info bg-opacity-25 text-info{% endif %} 
+                            {% if seance_id == sid %}bg-white text-dark{% endif %}" style="width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;">
+                            {{ sid }}
+                        </span>
+                        <span>
+                            {% if sid == 1 %}Cycle & Bilan
+                            {% elif sid == 2 %}Pluies & IDF
+                            {% elif sid == 3 %}Pertes & SCS-CN
+                            {% elif sid == 4 %}Débit de pointe
+                            {% elif sid == 5 %}GIEP & Nature
+                            {% elif sid == 6 %}Rétention & Infil.
+                            {% elif sid == 7 %}Hydraulique / Orifices
+                            {% elif sid == 8 %}Risques & Crues
+                            {% elif sid == 9 %}Modélisation 1D/2D
+                            {% elif sid == 10 %}Calage & Critère NSE
+                            {% elif sid == 11 %}Étude de Cas (12 ha)
+                            {% elif sid == 12 %}TP Numérique & SWMM
+                            {% endif %}
+                        </span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </nav>
+
+            <!-- Contenu principal -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
